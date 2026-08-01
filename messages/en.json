@@ -1,0 +1,135 @@
+{
+  "hero": {
+    "eyebrow": "ARCHITECTURAL SERIES",
+    "headlineLine1": "Redefining the Meaning",
+    "headlineLine2": "of Bath & Living",
+    "subtext": "Minimalist forms, rich natural stone, and architectural joinery designed for refined interior spaces.",
+    "scroll": "SCROLL"
+  },
+  "philosophy": {
+    "eyebrow": "OUR PHILOSOPHY",
+    "text": "LODE brings together minimalist form and rich natural materials, crafting kitchen and bathroom fixtures where every joint, edge, and finish reflects architectural precision — designed for spaces that demand refined character."
+  },
+  "collection": {
+    "eyebrow": "COLLECTION",
+    "irmaSubtitle": "Wall-Mounted Vanity Suite",
+    "elyxSubtitle": "Architectural Cabinet",
+    "lumaSubtitle": "Nero Marquina Suite"
+  },
+  "nav": {
+    "collection": "Collection",
+    "marin": "Marin",
+    "lightEdition": "Light Edition",
+    "contact": "Contact"
+  },
+  "marin": {
+    "eyebrow": "SIGNATURE PIECE",
+    "name": "MARIN",
+    "line1": "Shaped by water.",
+    "line2": "Held in walnut.",
+    "body": "A silhouette drawn from the movement of a wave — carved, curved, and finished by hand. MARIN does not sit against the wall. It moves along it.",
+    "spec1Title": "Body Joinery",
+    "spec1Val": "Undulating American Walnut",
+    "spec2Title": "Countertop",
+    "spec2Val": "Honed Natural Travertine",
+    "spec3Title": "Mirror Accent",
+    "spec3Val": "Twin Brass-Rimmed Mirrors"
+  },
+  "lightReveal": {
+    "question": "Too dark?",
+    "answer": "Then let's turn on the lights."
+  },
+  "lightCollection": {
+    "eyebrow": "LIGHT EDITION",
+    "title": "Harmony of Stone & Light",
+    "subtitle": "Refined architectural silhouettes bridging natural stone textures and modern lines.",
+    "products": {
+      "onyx": {
+        "tag": "GREEN ONYX SUITE",
+        "name": "ONYX",
+        "subtitle": "Matte Acrylic & Natural Green Onyx Marble",
+        "desc": "The serenity of sage green meets the captivating depth of gold-veined green onyx marble.",
+        "spec1Title": "Body Finish",
+        "spec1Val": "Sage Green Matte Acrylic",
+        "spec2Title": "Wall Panel",
+        "spec2Val": "Natural Green Onyx Marble",
+        "spec3Title": "Mirror",
+        "spec3Val": "Brass-Rimmed Rectangular Mirror"
+      },
+      "ava": {
+        "tag": "ARCHITECTURAL SUITE",
+        "name": "AVA",
+        "subtitle": "Natural Stone & Custom Veneer",
+        "desc": "The AVA series blends modern architectural lines with rich natural material textures for a refined vanity suite.",
+        "spec1Title": "Body Finish",
+        "spec1Val": "Specification Pending",
+        "spec2Title": "Countertop",
+        "spec2Val": "Specification Pending",
+        "spec3Title": "Mirror Detail",
+        "spec3Val": "Specification Pending"
+      },
+      "eron": {
+        "tag": "LUXURY ARCHITECTURAL SERIES",
+        "name": "ERON",
+        "subtitle": "Custom Cabinetry & Natural Marble",
+        "desc": "The ERON architectural series infuses spaces with strong character through crisp minimalist contours and bespoke joinery.",
+        "spec1Title": "Body Craft",
+        "spec1Val": "Specification Pending",
+        "spec2Title": "Countertop",
+        "spec2Val": "Specification Pending",
+        "spec3Title": "Accent Detail",
+        "spec3Val": "Specification Pending"
+      },
+      "ilya": {
+        "tag": "NATURAL WOOD SERIES",
+        "name": "ILYA",
+        "subtitle": "Solid Wood & Honed Stone",
+        "desc": "The ILYA suite merges the warmth and elegance of solid wood textures with minimalist architectural forms.",
+        "spec1Title": "Body Craft",
+        "spec1Val": "Specification Pending",
+        "spec2Title": "Countertop",
+        "spec2Val": "Specification Pending",
+        "spec3Title": "Mirror",
+        "spec3Val": "Specification Pending"
+      },
+      "ilya-antrasit": {
+        "tag": "ANTHRACITE COLLECTION",
+        "name": "ILYA ANTRASİT",
+        "subtitle": "Matte Anthracite & Natural Stone",
+        "desc": "ILYA Anthracite brings dark aesthetic depth and modern architectural elegance into luxury interiors.",
+        "spec1Title": "Body Finish",
+        "spec1Val": "Specification Pending",
+        "spec2Title": "Countertop",
+        "spec2Val": "Specification Pending",
+        "spec3Title": "Mirror",
+        "spec3Val": "Specification Pending"
+      },
+      "ilya-glory": {
+        "tag": "",
+        "name": "ILYA GLORY",
+        "subtitle": "Brass Accent Custom Finish",
+        "desc": "ILYA Glory represents the pinnacle of architectural bath design with handcrafted brass accents and rich textures.",
+        "spec1Title": "Body Joinery",
+        "spec1Val": "Specification Pending",
+        "spec2Title": "Countertop",
+        "spec2Val": "Specification Pending",
+        "spec3Title": "Mirror Accent",
+        "spec3Val": "Specification Pending"
+      }
+    }
+  },
+  "footer": {
+    "statement": "Kitchen and bathroom, considered as architecture.",
+    "navTitle": "NAVIGATION",
+    "navCollection": "Collection",
+    "navMarin": "MARIN",
+    "navLight": "Light Edition",
+    "navPhilosophy": "Philosophy",
+    "contactTitle": "CONTACT",
+    "address": "TODO: Address Details Pending (Kayseri / Turkey)",
+    "phone": "TODO: +90 (212) 000 00 00",
+    "email": "TODO: info@lode.com.tr",
+    "socialTitle": "FOLLOW",
+    "copyright": "© 2026 LODE. All rights reserved."
+  }
+}

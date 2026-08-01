@@ -1,0 +1,135 @@
+{
+  "hero": {
+    "eyebrow": "MİMARİ SERİ",
+    "headlineLine1": "Banyo Kelimesine",
+    "headlineLine2": "Yeni Bir Anlam Katalım",
+    "subtext": "Rafine iç mekanlar için tasarlanmış minimalist formlar, zengin doğal taş ve mimari işçilik.",
+    "scroll": "KAYDIR"
+  },
+  "philosophy": {
+    "eyebrow": "FELSEFEMİZ",
+    "text": "LODE, minimalist formu zengin doğal malzemelerle bir araya getirerek, her ek yerinin, kenarın ve yüzeyin mimari hassasiyeti yansıttığı mutfak ve banyo armatürleri üretir — sofistike karakter arayan mekanlar için tasarlanmıştır."
+  },
+  "collection": {
+    "eyebrow": "KOLEKSİYON",
+    "irmaSubtitle": "Duvara Monte Banyo Seti",
+    "elyxSubtitle": "Mimari Kabinet",
+    "lumaSubtitle": "Nero Marquina Mermer Seti"
+  },
+  "nav": {
+    "collection": "Koleksiyon",
+    "marin": "Marin",
+    "lightEdition": "Aydınlık Seri",
+    "contact": "İletişim"
+  },
+  "marin": {
+    "eyebrow": "İMZA PARÇA",
+    "name": "MARIN",
+    "line1": "Suyun şekillendirdiği.",
+    "line2": "Cevizde donmuş.",
+    "body": "Bir dalganın hareketinden çizilmiş bir siluet — elde oyulmuş, kavislendirilmiş, elde bitirilmiş. MARIN duvara yaslanmaz. Duvar boyunca akar.",
+    "spec1Title": "Gövde Yapısı",
+    "spec1Val": "Dalga Formlu Amerikan Ceviz",
+    "spec2Title": "Üst Yüzey",
+    "spec2Val": "Honlanmış Doğal Traverten Taş",
+    "spec3Title": "Ayna Detayı",
+    "spec3Val": "Çift Pirinç Çerçeveli Dairesel Ayna"
+  },
+  "lightReveal": {
+    "question": "Fazla mı koyu?",
+    "answer": "O zaman ışıkları açalım."
+  },
+  "lightCollection": {
+    "eyebrow": "AYDINLIK SERİ",
+    "title": "Doğal Taş ve Işığın Uymu",
+    "subtitle": "Doğanın dokusunu modern mimari çizgilerle buluşturan rafine formlar.",
+    "products": {
+      "onyx": {
+        "tag": "YEŞİL ONİKS SERİSİ",
+        "name": "ONYX",
+        "subtitle": "Mat Akrilik & Doğal Oniks Mermer",
+        "desc": "Adaçayı yeşilinin dinginliği, altın damarlı yeşil oniks mermerin büyüleyici derinliğiyle buluşuyor.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Adaçayı Yeşili Mat Akrilik",
+        "spec2Title": "Duvar Paneli",
+        "spec2Val": "Doğal Yeşil Oniks Mermer",
+        "spec3Title": "Ayna",
+        "spec3Val": "Pirinç Çerçeveli Dairesel Ayna"
+      },
+      "ava": {
+        "tag": "MİMARİ BANYO SERİSİ",
+        "name": "AVA",
+        "subtitle": "Doğal Taş & Özel Ahşap Kaplama",
+        "desc": "AVA serisi, modern mimari çizgileri doğal malzeme dokularıyla buluşturan rafine banyo tasarımı sunar.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Özellik Detayı Eklenecek",
+        "spec2Title": "Üst Yüzey",
+        "spec2Val": "Özellik Detayı Eklenecek",
+        "spec3Title": "Ayna Detayı",
+        "spec3Val": "Özellik Detayı Eklenecek"
+      },
+      "eron": {
+        "tag": "LÜKS MİMARİ SERİ",
+        "name": "ERON",
+        "subtitle": "Özel Kabine & Doğal Mermer",
+        "desc": "ERON mimari serisi, keskin minimalist hatları ve özel üretim detaylarıyla mekanlara karakter katar.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Özellik Detayı Eklenecek",
+        "spec2Title": "Tezgah",
+        "spec2Val": "Özellik Detayı Eklenecek",
+        "spec3Title": "Aksesuar",
+        "spec3Val": "Özellik Detayı Eklenecek"
+      },
+      "ilya": {
+        "tag": "DOĞAL AHŞAP SERİSİ",
+        "name": "ILYA",
+        "subtitle": "Masif Ahşap & Honlanmış Taş",
+        "desc": "ILYA serisi, masif dokuların zarafetini yalın mimari formlarla buluşturan özel banyo koleksiyonudur.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Özellik Detayı Eklenecek",
+        "spec2Title": "Üst Yüzey",
+        "spec2Val": "Özellik Detayı Eklenecek",
+        "spec3Title": "Ayna",
+        "spec3Val": "Özellik Detayı Eklenecek"
+      },
+      "ilya-antrasit": {
+        "tag": "ANTRASİT KOLEKSİYONU",
+        "name": "ILYA ANTRASİT",
+        "subtitle": "Mat Antrasit & Doğal Taş",
+        "desc": "ILYA Antrasit, koyu tonların derinliğini ve modern mimari estetiği banyolarınıza taşır.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Özellik Detayı Eklenecek",
+        "spec2Title": "Tezgah",
+        "spec2Val": "Özellik Detayı Eklenecek",
+        "spec3Title": "Ayna",
+        "spec3Val": "Özellik Detayı Eklenecek"
+      },
+      "ilya-glory": {
+        "tag": "",
+        "name": "ILYA GLORY",
+        "subtitle": "Pirinç Detaylı Özel Kaplama",
+        "desc": "ILYA Glory, özel pirinç detayları ve zengin yüzey dokularıyla mimari banyo tasarımında zirveyi temsil eder.",
+        "spec1Title": "Gövde Yapısı",
+        "spec1Val": "Özellik Detayı Eklenecek",
+        "spec2Title": "Tezgah",
+        "spec2Val": "Özellik Detayı Eklenecek",
+        "spec3Title": "Ayna",
+        "spec3Val": "Özellik Detayı Eklenecek"
+      }
+    }
+  },
+  "footer": {
+    "statement": "Mutfak ve banyo, mimari olarak düşünüldü.",
+    "navTitle": "GEZİNTİ",
+    "navCollection": "Koleksiyon",
+    "navMarin": "MARIN",
+    "navLight": "Aydınlık Seri",
+    "navPhilosophy": "Felsefe",
+    "contactTitle": "İLETİŞİM",
+    "address": "TODO: Adres Detayı Eklenecek (Kayseri / Türkiye)",
+    "phone": "TODO: +90 (212) 000 00 00",
+    "email": "TODO: info@lode.com.tr",
+    "socialTitle": "TAKİP ET",
+    "copyright": "© 2026 LODE. Tüm hakları saklıdır."
+  }
+}

@@ -18,21 +18,21 @@ interface Product {
 const PRODUCTS: Product[] = [
   {
     id: "01",
-    name: "IRMA",
-    subtitle: "Wall-Mounted Vanity Suite",
-    image: "/images/collection/irma.jpg",
+    name: "LAVOR",
+    subtitle: "Cam & Ahşap Mimari Banyo Seti",
+    image: "/images/collection/lavor.jpg",
   },
   {
     id: "02",
-    name: "ELYX",
-    subtitle: "Architectural Cabinet",
-    image: "/images/collection/elyx.jpg",
+    name: "LINE",
+    subtitle: "Mimari Banyo Kabini",
+    image: "/images/collection/line.jpg",
   },
   {
     id: "03",
-    name: "LUMA",
-    subtitle: "Nero Marquina Suite",
-    image: "/images/collection/luma.jpg",
+    name: "İPEK",
+    subtitle: "Ahşap Derinlik & Çift Dolaplı Set",
+    image: "/images/collection/ipek.jpg",
   },
 ];
 
@@ -331,9 +331,9 @@ export default function Collection() {
   };
 
   const productSubtitles: Record<string, string> = {
-    "01": t("irmaSubtitle"),
-    "02": t("elyxSubtitle"),
-    "03": t("lumaSubtitle"),
+    "01": t("lavorSubtitle"),
+    "02": t("lineSubtitle"),
+    "03": t("ipekSubtitle"),
   };
 
   return (
@@ -390,7 +390,7 @@ export default function Collection() {
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative w-full max-w-6xl mx-auto h-[230px] sm:h-[320px] md:h-[400px] lg:h-[460px] flex items-center justify-center [perspective:1200px] [transform-style:preserve-3d]"
+        className="relative w-full max-w-6xl mx-auto h-[240px] sm:h-[340px] md:h-[420px] lg:h-[490px] flex items-center justify-center [perspective:1200px] [transform-style:preserve-3d]"
       >
         {/* Nav Arrow Left */}
         <button
@@ -432,13 +432,13 @@ export default function Collection() {
                   if (isLeft) navigate("prev");
                   if (isRight) navigate("next");
                 }}
-                className={`absolute top-0 left-1/2 w-[280px] sm:w-[420px] md:w-[540px] lg:w-[640px] aspect-[16/10] rounded-sm overflow-hidden will-change-transform [transform-style:preserve-3d] ${
+                className={`absolute top-0 left-1/2 w-[270px] sm:w-[390px] md:w-[500px] lg:w-[610px] aspect-[4/3] rounded-sm overflow-hidden will-change-transform [transform-style:preserve-3d] ${
                   isCenter ? "cursor-default" : "cursor-pointer"
                 }`}
                 style={{ transformOrigin: "center center" }}
               >
                 {/* 3D Card Glass & Frame Container */}
-                <div className="relative w-full h-full p-2.5 sm:p-3.5 md:p-4 border border-[var(--color-stone)]/40 bg-[#141210]/95 shadow-[0_30px_70px_rgba(0,0,0,0.85)] transition-colors duration-500 [transform-style:preserve-3d]">
+                <div className="relative w-full h-full p-2 sm:p-3 md:p-3.5 border border-[var(--color-stone)]/40 bg-[#141210]/95 shadow-[0_30px_70px_rgba(0,0,0,0.85)] transition-colors duration-500 [transform-style:preserve-3d]">
                   {/* Dynamic Active Gold 3D Frame Overlay */}
                   <div className="gold-frame absolute inset-0 border border-[var(--color-gold)]/80 bg-[#171513] shadow-[0_35px_80px_-10px_rgba(59,34,38,0.85)] pointer-events-none transition-opacity duration-500 opacity-0" />
 
@@ -447,7 +447,7 @@ export default function Collection() {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out scale-105"
+                      className="w-full h-full object-cover object-center transition-transform duration-700 ease-out scale-105"
                     />
                   </div>
 

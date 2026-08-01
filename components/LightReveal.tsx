@@ -25,51 +25,6 @@ export default function LightReveal() {
     const ctx = gsap.context(() => {
       if (!containerRef.current || !pinStageRef.current) return;
 
-      const runSplit = () => {
-        if (splitAnswer) splitAnswer.revert();
-
-        if (answerRef.current) {
-          splitAnswer = new SplitType(answerRef.current, {
-            types: "words",
-            wordClass: "inline-block mr-[0.25em] will-change-transform",
-          });
-        }
-
-        // Initial Element States
-        if (lightBgOverlayRef.current) {
-          gsap.set(lightBgOverlayRef.current, { opacity: 0 });
-        }
-
-        if (glowOverlayRef.current) {
-          gsap.set(glowOverlayRef.current, {
-            opacity: 0,
-            scale: 1,
-          });
-        }
-
-        if (questionRef.current) {
-          gsap.set(questionRef.current, {
-            opacity: 0.4,
-            scale: 1,
-            y: 0,
-            color: "rgba(156, 144, 134, 0.5)",
-          });
-        }
-
-        // Parent Answer container initially hidden & offset down
-        if (answerRef.current) {
-          gsap.set(answerRef.current, { opacity: 0, y: 20 });
-        }
-
-        const answerWords = splitAnswer?.words || [];
-        if (answerWords.length > 0) {
-          gsap.set(answerWords, { opacity: 0, y: 20 });
-        }
-      };
-
-      runSplit();
-
-      // Master ScrollTrigger Timeline
       const mm = gsap.matchMedia();
 
       mm.add(
@@ -79,6 +34,45 @@ export default function LightReveal() {
         },
         (context) => {
           const isMobile = context.conditions?.isMobile ?? false;
+
+          // Revert and split answer inside matchMedia so timeline targets valid DOM elements
+          if (splitAnswer) splitAnswer.revert();
+          if (answerRef.current) {
+            splitAnswer = new SplitType(answerRef.current, {
+              types: "words",
+              wordClass: "inline-block mr-[0.25em] will-change-transform",
+            });
+          }
+
+          // Initial Element States
+          if (lightBgOverlayRef.current) {
+            gsap.set(lightBgOverlayRef.current, { opacity: 0 });
+          }
+
+          if (glowOverlayRef.current) {
+            gsap.set(glowOverlayRef.current, {
+              opacity: 0,
+              scale: 1,
+            });
+          }
+
+          if (questionRef.current) {
+            gsap.set(questionRef.current, {
+              opacity: 0.4,
+              scale: 1,
+              y: 0,
+              color: "rgba(156, 144, 134, 0.5)",
+            });
+          }
+
+          if (answerRef.current) {
+            gsap.set(answerRef.current, { opacity: 1, y: 0 });
+          }
+
+          const answerWords = splitAnswer?.words || [];
+          if (answerWords.length > 0) {
+            gsap.set(answerWords, { opacity: 0, y: 30 });
+          }
 
           const master = gsap.timeline({
             scrollTrigger: {
@@ -186,22 +180,7 @@ export default function LightReveal() {
             );
           }
 
-          // Animate parent Answer container to opacity 1 & y 0
-          if (answerRef.current) {
-            master.to(
-              answerRef.current,
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.18,
-                ease: "power2.out",
-              },
-              0.46
-            );
-          }
-
-          // Animate child words if split
-          const answerWords = splitAnswer?.words || [];
+          // Animate child words if split, or parent if not
           if (answerWords.length > 0) {
             master.to(
               answerWords,
@@ -229,7 +208,18 @@ export default function LightReveal() {
           );
 
           // ── BEAT 4 (0.85 → 1.0): HOLD AND HANDOFF ──
-          if (answerRef.current) {
+          if (answerWords.length > 0) {
+            master.to(
+              answerWords,
+              {
+                y: -40,
+                opacity: 0,
+                duration: 0.15,
+                ease: "power2.in",
+              },
+              0.85
+            );
+          } else if (answerRef.current) {
             master.to(
               answerRef.current,
               {
@@ -246,7 +236,6 @@ export default function LightReveal() {
 
       if (typeof document !== "undefined" && "fonts" in document) {
         document.fonts.ready.then(() => {
-          runSplit();
           ScrollTrigger.refresh();
         });
       }

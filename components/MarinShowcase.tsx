@@ -339,7 +339,6 @@ export default function MarinShowcase() {
 
       if (typeof document !== "undefined" && "fonts" in document) {
         document.fonts.ready.then(() => {
-          runSplit();
           ScrollTrigger.refresh();
         });
       }

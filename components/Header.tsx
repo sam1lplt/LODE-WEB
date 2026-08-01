@@ -5,6 +5,23 @@ import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Header() {
+  React.useEffect(() => {
+    const handleScroll = () => {
+      // Whenever near top of page (Hero/ScrollTextReveal), guarantee dark header palette
+      if (window.scrollY < 400) {
+        document.documentElement.style.setProperty("--header-theme-light", "0");
+        document.documentElement.style.setProperty("--header-text-color", "#E8DFD3");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-5 py-4 sm:px-8 sm:py-6 md:px-16 flex items-center justify-between pointer-events-none">
       {/* Dark Theme Header Backdrop Gradient Mask */}

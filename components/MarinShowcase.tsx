@@ -324,6 +324,16 @@ export default function MarinShowcase() {
               0.88
             );
           }
+
+          // Force header theme reset to dark identity when entering Marin section scrolling upward
+          ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top 80%",
+            onEnterBack: () => {
+              document.documentElement.style.setProperty("--header-theme-light", "0");
+              document.documentElement.style.setProperty("--header-text-color", "#E8DFD3");
+            },
+          });
         }
       );
 

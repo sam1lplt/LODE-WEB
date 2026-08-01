@@ -75,164 +75,176 @@ export default function LightReveal() {
         }
 
         // Master ScrollTrigger Timeline
-        const master = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            pin: pinStageRef.current,
-            scrub: 1.2,
-            invalidateOnRefresh: true,
-          },
-        });
+        const mm = gsap.matchMedia();
 
-        // ── BEAT 1 (0 → 0.18): THE QUESTION IN DARKNESS ──
-        // Question holds in dim opacity with subtle drift
-        if (questionRef.current) {
-          master.to(
-            questionRef.current,
-            {
-              y: -10,
-              duration: 0.18,
-              ease: "none",
-            },
-            0
-          );
-        }
-
-        // ── BEAT 2 (0.18 → 0.42): THE LIGHT FIXTURE FLICKER ──
-        // Irregular stepped keyframe flickering sequence like an old filament catching
-        if (glowOverlayRef.current && questionRef.current) {
-          const flickerTl = gsap.timeline();
-
-          // Rapid uneven flashes on glow overlay & question text opacity
-          flickerTl
-            .to([glowOverlayRef.current], { opacity: 0.35, duration: 0.03, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.03, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 0, duration: 0.04, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 0.3, color: "rgba(156, 144, 134, 0.4)", duration: 0.04, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 0.75, duration: 0.05, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 1.0, color: "#E8DFD3", duration: 0.05, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 0.15, duration: 0.03, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 0.4, color: "rgba(156, 144, 134, 0.5)", duration: 0.03, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 0.95, duration: 0.06, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.06, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 0.3, duration: 0.02, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 0.5, color: "#E8DFD3", duration: 0.02, ease: "steps(1)" }, "<")
-
-            .to([glowOverlayRef.current], { opacity: 1.0, duration: 0.02, ease: "steps(1)" })
-            .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.02, ease: "steps(1)" }, "<");
-
-          master.add(flickerTl, 0.18);
-        }
-
-        // ── BEAT 3 (0.42 → 0.85): FULL ILLUMINATION & PALETTE SHIFT ──
-        // 1. Stage background transitions from --color-black (#141210) to --color-light-bg (#F2EDE6)
-        master.to(
-          pinStageRef.current,
+        mm.add(
           {
-            backgroundColor: "#F2EDE6",
-            duration: 0.22,
-            ease: "power2.inOut",
+            isDesktop: "(min-width: 768px)",
+            isMobile: "(max-width: 767px)",
           },
-          0.42
-        );
+          (context) => {
+            const isMobile = context.conditions?.isMobile ?? false;
 
-        // 2. Glow overlay expands, softens, and settles into ambient room light (~0.18)
-        if (glowOverlayRef.current) {
-          master.to(
-            glowOverlayRef.current,
-            {
-              scale: 2.5,
-              filter: "blur(60px)",
-              opacity: 0.18,
-              duration: 0.22,
-              ease: "power2.out",
-            },
-            0.42
-          );
-        }
+            const master = gsap.timeline({
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom bottom",
+                pin: pinStageRef.current,
+                scrub: isMobile ? 0.4 : 1.0,
+                invalidateOnRefresh: true,
+              },
+            });
 
-        // 3. Question text scales & fades out
-        if (questionRef.current) {
-          master.to(
-            questionRef.current,
-            {
-              opacity: 0,
-              scale: 0.9,
-              duration: 0.12,
-              ease: "power2.in",
-            },
-            0.42
-          );
-        }
+            // ── BEAT 1 (0 → 0.18): THE QUESTION IN DARKNESS ──
+            // Question holds in dim opacity with subtle drift
+            if (questionRef.current) {
+              master.to(
+                questionRef.current,
+                {
+                  y: -10,
+                  duration: 0.18,
+                  ease: "none",
+                },
+                0
+              );
+            }
 
-        // 4. Answer text ("O zaman ışıkları açalım.") fades in with staggered words
-        if (answerRef.current) {
-          master.to(
-            answerRef.current,
-            {
-              opacity: 1,
-              duration: 0.04,
-            },
-            0.46
-          );
-        }
+            // ── BEAT 2 (0.18 → 0.42): THE LIGHT FIXTURE FLICKER ──
+            // Irregular stepped keyframe flickering sequence like an old filament catching
+            if (glowOverlayRef.current && questionRef.current) {
+              const flickerTl = gsap.timeline();
 
-        if (answerWords.length > 0) {
-          master.to(
-            answerWords,
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.16,
-              stagger: 0.04,
-              ease: "power3.out",
-            },
-            0.46
-          );
-        }
+              // Rapid uneven flashes on glow overlay & question text opacity
+              flickerTl
+                .to([glowOverlayRef.current], { opacity: 0.35, duration: 0.03, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.03, ease: "steps(1)" }, "<")
 
-        // 5. Header Theme Transition: animate CSS variables on :root to shift Header to dark palette
-        master.to(
-          ":root",
-          {
-            "--header-theme-light": 1,
-            "--header-text-color": "#2A2522",
-            duration: 0.22,
-            ease: "power2.inOut",
-          },
-          0.42
-        );
+                .to([glowOverlayRef.current], { opacity: 0, duration: 0.04, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 0.3, color: "rgba(156, 144, 134, 0.4)", duration: 0.04, ease: "steps(1)" }, "<")
 
-        // ── BEAT 4 (0.85 → 1.0): HOLD AND HANDOFF ──
-        // Answer holds 100% solid until 0.85, then drifts up and fades out
-        if (answerRef.current) {
-          master.to(
-            answerRef.current,
-            {
-              y: -50,
-              opacity: 0,
-              duration: 0.15,
-              ease: "power2.in",
-            },
-            0.85
-          );
-        }
+                .to([glowOverlayRef.current], { opacity: 0.75, duration: 0.05, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 1.0, color: "#E8DFD3", duration: 0.05, ease: "steps(1)" }, "<")
 
-        // Background stays fully at #F2EDE6 through end of pin, ensuring seamless handoff to next light section
-        master.to(
-          pinStageRef.current,
-          {
-            backgroundColor: "#F2EDE6",
-            duration: 0.15,
-          },
-          0.85
+                .to([glowOverlayRef.current], { opacity: 0.15, duration: 0.03, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 0.4, color: "rgba(156, 144, 134, 0.5)", duration: 0.03, ease: "steps(1)" }, "<")
+
+                .to([glowOverlayRef.current], { opacity: 0.95, duration: 0.06, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.06, ease: "steps(1)" }, "<")
+
+                .to([glowOverlayRef.current], { opacity: 0.3, duration: 0.02, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 0.5, color: "#E8DFD3", duration: 0.02, ease: "steps(1)" }, "<")
+
+                .to([glowOverlayRef.current], { opacity: 1.0, duration: 0.02, ease: "steps(1)" })
+                .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.02, ease: "steps(1)" }, "<");
+
+              master.add(flickerTl, 0.18);
+            }
+
+            // ── BEAT 3 (0.42 → 0.85): FULL ILLUMINATION & PALETTE SHIFT ──
+            // 1. Stage background transitions from --color-black (#141210) to --color-light-bg (#F2EDE6)
+            master.to(
+              pinStageRef.current,
+              {
+                backgroundColor: "#F2EDE6",
+                duration: 0.22,
+                ease: "power2.inOut",
+              },
+              0.42
+            );
+
+            // 2. Glow overlay expands, softens, and settles into ambient room light (~0.18)
+            if (glowOverlayRef.current) {
+              master.to(
+                glowOverlayRef.current,
+                {
+                  scale: 2.5,
+                  filter: "blur(60px)",
+                  opacity: 0.18,
+                  duration: 0.22,
+                  ease: "power2.out",
+                },
+                0.42
+              );
+            }
+
+            // 3. Question text scales & fades out
+            if (questionRef.current) {
+              master.to(
+                questionRef.current,
+                {
+                  opacity: 0,
+                  scale: 0.9,
+                  duration: 0.12,
+                  ease: "power2.in",
+                },
+                0.42
+              );
+            }
+
+            // 4. Answer text ("O zaman ışıkları açalım.") fades in with staggered words
+            if (answerRef.current) {
+              master.to(
+                answerRef.current,
+                {
+                  opacity: 1,
+                  duration: 0.04,
+                },
+                0.46
+              );
+            }
+
+            if (answerWords.length > 0) {
+              master.to(
+                answerWords,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.16,
+                  stagger: 0.04,
+                  ease: "power3.out",
+                },
+                0.46
+              );
+            }
+
+            // 5. Header Theme Transition: animate CSS variables on :root to shift Header to dark palette
+            master.to(
+              ":root",
+              {
+                "--header-theme-light": 1,
+                "--header-text-color": "#2A2522",
+                duration: 0.22,
+                ease: "power2.inOut",
+              },
+              0.42
+            );
+
+            // ── BEAT 4 (0.85 → 1.0): HOLD AND HANDOFF ──
+            // Answer holds 100% solid until 0.85, then drifts up and fades out
+            if (answerRef.current) {
+              master.to(
+                answerRef.current,
+                {
+                  y: -50,
+                  opacity: 0,
+                  duration: 0.15,
+                  ease: "power2.in",
+                },
+                0.85
+              );
+            }
+
+            // Background stays fully at #F2EDE6 through end of pin, ensuring seamless handoff to next light section
+            master.to(
+              pinStageRef.current,
+              {
+                backgroundColor: "#F2EDE6",
+                duration: 0.15,
+              },
+              0.85
+            );
+          }
         );
 
         // Refresh calculations
@@ -263,12 +275,12 @@ export default function LightReveal() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[220vh] md:h-[450vh] bg-[var(--color-black)] select-none font-sans"
+      className="relative w-full h-[300vh] md:h-[450vh] bg-[var(--color-black)] select-none font-sans"
     >
       {/* Pinned Full-Viewport Stage */}
       <div
         ref={pinStageRef}
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center transition-colors"
+        className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center transition-colors"
       >
         {/* Warm Fixture Radial Glow Overlay */}
         <div

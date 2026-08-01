@@ -113,7 +113,7 @@ export default function MarinShowcase() {
                 start: "top top",
                 end: "bottom bottom",
                 pin: pinStageRef.current,
-                scrub: 1.2,
+                scrub: isMobile ? 0.4 : 1.0,
                 invalidateOnRefresh: true,
               },
             });
@@ -348,12 +348,12 @@ export default function MarinShowcase() {
     <section
       ref={containerRef}
       id="marin"
-      className="relative w-full h-[250vh] md:h-[500vh] bg-[var(--color-black)] select-none font-sans"
+      className="relative w-full h-[320vh] md:h-[500vh] bg-[var(--color-black)] select-none font-sans"
     >
       {/* Pinned Full-Viewport Stage */}
       <div
         ref={pinStageRef}
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#241c1e] via-[#141210] to-[#080706]"
+        className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#241c1e] via-[#141210] to-[#080706]"
       >
         {/* Warm High-Contrast Stage Ambient Backlight Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] sm:w-[1000px] sm:h-[1000px] bg-[var(--color-gold)]/10 rounded-full blur-[160px] pointer-events-none" />

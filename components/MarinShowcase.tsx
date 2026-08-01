@@ -46,31 +46,29 @@ export default function MarinShowcase() {
             types: "chars",
             charClass: "inline-block will-change-transform",
           });
-          if (!splitName.chars || splitName.chars.length === 0) {
-            console.warn("[MarinShowcase] splitName chars were empty, retrying SplitType");
-            splitName = new SplitType(nameRef.current, {
-              types: "chars",
-              charClass: "inline-block will-change-transform",
+        }
+
+        // On desktop, split sublines & body text for fine-grained word scatter; on mobile keep as blocks for max 60fps
+        const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+        if (isDesktop) {
+          if (line1Ref.current) {
+            splitLine1 = new SplitType(line1Ref.current, {
+              types: "words",
+              wordClass: "inline-block mr-[0.2em] will-change-transform",
             });
           }
-        }
-        if (line1Ref.current) {
-          splitLine1 = new SplitType(line1Ref.current, {
-            types: "words",
-            wordClass: "inline-block mr-[0.2em] will-change-transform",
-          });
-        }
-        if (line2Ref.current) {
-          splitLine2 = new SplitType(line2Ref.current, {
-            types: "words",
-            wordClass: "inline-block mr-[0.2em] will-change-transform",
-          });
-        }
-        if (introBodyRef.current) {
-          splitIntroBody = new SplitType(introBodyRef.current, {
-            types: "words",
-            wordClass: "inline-block mr-[0.25em] will-change-transform",
-          });
+          if (line2Ref.current) {
+            splitLine2 = new SplitType(line2Ref.current, {
+              types: "words",
+              wordClass: "inline-block mr-[0.2em] will-change-transform",
+            });
+          }
+          if (introBodyRef.current) {
+            splitIntroBody = new SplitType(introBodyRef.current, {
+              types: "words",
+              wordClass: "inline-block mr-[0.25em] will-change-transform",
+            });
+          }
         }
 
         // Initial Element States
@@ -79,12 +77,10 @@ export default function MarinShowcase() {
         }
         if (showcaseCardRef.current) {
           gsap.set(showcaseCardRef.current, {
-            scale: 0.88,
+            scale: 0.9,
             opacity: 0,
-            y: 50,
-            rotateY: -4,
-            transformPerspective: 1200,
-            transformStyle: "preserve-3d",
+            y: 40,
+            rotateY: 0,
           });
         }
         if (blackFadeRef.current) {
@@ -113,7 +109,7 @@ export default function MarinShowcase() {
               start: "top top",
               end: "bottom bottom",
               pin: pinStageRef.current,
-              scrub: isMobile ? 0.5 : 0.8,
+              scrub: isMobile ? 0.3 : 0.8,
               fastScrollEnd: true,
               preventOverlaps: true,
               invalidateOnRefresh: true,
@@ -137,8 +133,7 @@ export default function MarinShowcase() {
               eyebrowRef.current,
               {
                 opacity: 0,
-                y: -50,
-                scale: 0.8,
+                y: -40,
                 duration: 0.12,
                 ease: "power2.in",
               },
@@ -146,50 +141,63 @@ export default function MarinShowcase() {
             );
           }
 
-          const lineWords = [
-            ...(splitLine1?.words || []),
-            ...(splitLine2?.words || []),
-          ];
-          const lineDist = isMobile ? 100 : 280;
-          if (lineWords.length > 0) {
-            master.to(
-              lineWords,
-              {
-                x: (i) => (i % 2 === 0 ? -lineDist : lineDist),
-                y: (i) => (isMobile ? -40 : -120) + (i % 3) * (isMobile ? 15 : 40),
-                scale: 0.2,
-                opacity: 0,
-                rotation: (i) => (i % 2 === 0 ? -25 : 25),
-                duration: 0.16,
-                stagger: 0.008,
-                ease: "power3.in",
-              },
-              0.14
-            );
+          if (isMobile) {
+            // High-Performance Mobile Animation: Fade out sublines and intro body as clean blocks
+            if (line1Ref.current) {
+              master.to(line1Ref.current, { opacity: 0, y: -30, duration: 0.14, ease: "power2.in" }, 0.14);
+            }
+            if (line2Ref.current) {
+              master.to(line2Ref.current, { opacity: 0, y: -30, duration: 0.14, ease: "power2.in" }, 0.14);
+            }
+            if (introBodyRef.current) {
+              master.to(introBodyRef.current, { opacity: 0, y: 30, duration: 0.14, ease: "power2.in" }, 0.14);
+            }
+          } else {
+            // Desktop word-by-word scatter
+            const lineWords = [
+              ...(splitLine1?.words || []),
+              ...(splitLine2?.words || []),
+            ];
+            if (lineWords.length > 0) {
+              master.to(
+                lineWords,
+                {
+                  x: (i) => (i % 2 === 0 ? -280 : 280),
+                  y: (i) => -120 + (i % 3) * 40,
+                  scale: 0.2,
+                  opacity: 0,
+                  rotation: (i) => (i % 2 === 0 ? -25 : 25),
+                  duration: 0.16,
+                  stagger: 0.008,
+                  ease: "power3.in",
+                },
+                0.14
+              );
+            }
+
+            const bodyWords = splitIntroBody?.words || [];
+            if (bodyWords.length > 0) {
+              master.to(
+                bodyWords,
+                {
+                  x: (i) => (i % 2 === 0 ? -320 : 320),
+                  y: (i) => 120 + (i % 4) * 30,
+                  scale: 0.15,
+                  opacity: 0,
+                  rotation: (i) => (i % 2 === 0 ? 30 : -30),
+                  duration: 0.16,
+                  stagger: 0.006,
+                  ease: "power3.in",
+                },
+                0.14
+              );
+            }
           }
 
-          const bodyWords = splitIntroBody?.words || [];
-          const bodyDist = isMobile ? 120 : 320;
-          if (bodyWords.length > 0) {
-            master.to(
-              bodyWords,
-              {
-                x: (i) => (i % 2 === 0 ? -bodyDist : bodyDist),
-                y: (i) => (isMobile ? 40 : 120) + (i % 4) * (isMobile ? 15 : 30),
-                scale: 0.15,
-                opacity: 0,
-                rotation: (i) => (i % 2 === 0 ? 30 : -30),
-                duration: 0.16,
-                stagger: 0.006,
-                ease: "power3.in",
-              },
-              0.14
-            );
-          }
-
+          // MARIN Characters Radial Explosion (Full on mobile & desktop)
           const nameChars = splitName?.chars || [];
-          const charDist = isMobile ? 130 : 450;
-          const charYDist = isMobile ? -120 : -320;
+          const charDist = isMobile ? 120 : 450;
+          const charYDist = isMobile ? -100 : -320;
           if (nameChars.length > 0) {
             const count = nameChars.length;
             const centerIndex = (count - 1) / 2;
@@ -199,15 +207,15 @@ export default function MarinShowcase() {
               {
                 x: (i) => {
                   const norm = (i - centerIndex) / (centerIndex || 1);
-                  return norm * charDist + (i % 2 === 0 ? 20 : -20);
+                  return norm * charDist + (i % 2 === 0 ? 15 : -15);
                 },
                 y: (i) => {
                   const norm = Math.abs((i - centerIndex) / (centerIndex || 1));
-                  return charYDist - norm * (isMobile ? 30 : 80) + (i % 2 === 0 ? -15 : 15);
+                  return charYDist - norm * (isMobile ? 25 : 80) + (i % 2 === 0 ? -10 : 10);
                 },
-                scale: isMobile ? 1.3 : 1.8,
+                scale: isMobile ? 1.25 : 1.8,
                 opacity: 0,
-                rotation: (i) => (i - centerIndex) * (isMobile ? 18 : 35) + (i % 2 === 0 ? 12 : -12),
+                rotation: (i) => (i - centerIndex) * (isMobile ? 15 : 35) + (i % 2 === 0 ? 10 : -10),
                 duration: 0.18,
                 stagger: {
                   from: "center",
@@ -347,8 +355,8 @@ export default function MarinShowcase() {
         ref={pinStageRef}
         className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#241c1e] via-[#141210] to-[#080706]"
       >
-        {/* Warm High-Contrast Stage Ambient Backlight Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] sm:w-[1000px] sm:h-[1000px] bg-[var(--color-gold)]/10 rounded-full blur-[160px] pointer-events-none" />
+        {/* Warm High-Contrast Stage Ambient Backlight Glow (Zero blur filter for 60fps mobile) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[900px] sm:h-[900px] bg-[radial-gradient(circle_at_center,_rgba(184,146,90,0.12)_0%,_rgba(184,146,90,0.04)_40%,_transparent_70%)] pointer-events-none" />
 
         {/* Black Handoff Fade-Out Overlay (BEAT 4) */}
         <div
@@ -408,8 +416,8 @@ export default function MarinShowcase() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             {/* LEFT COLUMN: FLOATING ARCHITECTURAL PHOTO FRAME */}
             <div className="lg:col-span-7 relative">
-              {/* Photo Stage Ambient Backlight Glow */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-tr from-[var(--color-gold)]/20 via-transparent to-transparent rounded-full blur-[90px] pointer-events-none" />
+              {/* Photo Stage Ambient Backlight Glow (Zero blur) */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[radial-gradient(circle_at_center,_rgba(184,146,90,0.15)_0%,_transparent_70%)] pointer-events-none" />
 
               <div
                 ref={imageFrameRef}

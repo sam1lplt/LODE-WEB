@@ -28,21 +28,16 @@ export default function LightReveal() {
       const runSplit = () => {
         if (splitAnswer) splitAnswer.revert();
 
-        if (answerRef.current) {
+        const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+
+        if (isDesktop && answerRef.current) {
           splitAnswer = new SplitType(answerRef.current, {
             types: "words",
             wordClass: "inline-block mr-[0.25em] will-change-transform",
           });
-          if (!splitAnswer.words || splitAnswer.words.length === 0) {
-            console.warn("[LightReveal] splitAnswer words were empty, retrying SplitType");
-            splitAnswer = new SplitType(answerRef.current, {
-              types: "words",
-              wordClass: "inline-block mr-[0.25em] will-change-transform",
-            });
-          }
         }
 
-        // Initial Element States (Composited Opacity/Transform Only)
+        // Initial Element States
         if (lightBgOverlayRef.current) {
           gsap.set(lightBgOverlayRef.current, { opacity: 0 });
         }
@@ -64,7 +59,7 @@ export default function LightReveal() {
         }
 
         if (answerRef.current) {
-          gsap.set(answerRef.current, { opacity: 0 });
+          gsap.set(answerRef.current, { opacity: 0, y: 20 });
         }
 
         const answerWords = splitAnswer?.words || [];
@@ -92,7 +87,7 @@ export default function LightReveal() {
               start: "top top",
               end: "bottom bottom",
               pin: pinStageRef.current,
-              scrub: isMobile ? 0.5 : 0.8,
+              scrub: isMobile ? 0.3 : 0.8,
               fastScrollEnd: true,
               preventOverlaps: true,
               invalidateOnRefresh: true,
@@ -112,23 +107,21 @@ export default function LightReveal() {
             );
           }
 
-          // ── BEAT 2 (0.18 → 0.42): LIGHT FIXTURE FLICKER (Optimized Steps) ──
+          // ── BEAT 2 (0.18 → 0.42): LIGHT FIXTURE FLICKER ──
           if (glowOverlayRef.current && questionRef.current) {
             const flickerTl = gsap.timeline();
 
             if (isMobile) {
-              // 4 streamlined discrete flicker steps for high mobile FPS
+              // Smooth 3-pulse flicker for ultra-high mobile FPS
               flickerTl
-                .to([glowOverlayRef.current], { opacity: 0.4, duration: 0.05, ease: "steps(1)" })
-                .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.05, ease: "steps(1)" }, "<")
+                .to([glowOverlayRef.current], { opacity: 0.5, duration: 0.06, ease: "none" })
+                .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.06, ease: "none" }, "<")
 
-                .to([glowOverlayRef.current], { opacity: 0.1, duration: 0.04, ease: "steps(1)" })
-                .to(questionRef.current, { opacity: 0.3, color: "rgba(156, 144, 134, 0.4)", duration: 0.04, ease: "steps(1)" }, "<")
+                .to([glowOverlayRef.current], { opacity: 0.15, duration: 0.05, ease: "none" })
+                .to(questionRef.current, { opacity: 0.3, color: "rgba(156, 144, 134, 0.4)", duration: 0.05, ease: "none" }, "<")
 
-                .to([glowOverlayRef.current], { opacity: 0.85, duration: 0.06, ease: "steps(1)" })
-                .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.06, ease: "steps(1)" }, "<")
-
-                .to([glowOverlayRef.current], { opacity: 1.0, duration: 0.04, ease: "steps(1)" });
+                .to([glowOverlayRef.current], { opacity: 1.0, duration: 0.07, ease: "none" })
+                .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.07, ease: "none" }, "<");
             } else {
               // Full 8 keyframe steps for desktop
               flickerTl
@@ -176,7 +169,7 @@ export default function LightReveal() {
             master.to(
               glowOverlayRef.current,
               {
-                scale: 2.5,
+                scale: isMobile ? 1.8 : 2.5,
                 opacity: 0.18,
                 duration: 0.22,
                 ease: "power2.out",
@@ -199,20 +192,22 @@ export default function LightReveal() {
             );
           }
 
-          // 4. Answer text ("O zaman ışıkları açalım.") fades in with staggered words
+          // 4. Answer text ("O zaman ışıkları açalım.")
           if (answerRef.current) {
             master.to(
               answerRef.current,
               {
                 opacity: 1,
-                duration: 0.04,
+                y: 0,
+                duration: 0.18,
+                ease: "power2.out",
               },
               0.46
             );
           }
 
           const answerWords = splitAnswer?.words || [];
-          if (answerWords.length > 0) {
+          if (!isMobile && answerWords.length > 0) {
             master.to(
               answerWords,
               {
@@ -243,7 +238,7 @@ export default function LightReveal() {
             master.to(
               answerRef.current,
               {
-                y: -50,
+                y: -40,
                 opacity: 0,
                 duration: 0.15,
                 ease: "power2.in",
@@ -298,13 +293,13 @@ export default function LightReveal() {
         {/* High-Performance Light Background Overlay (Opacity Composited, Zero Repaint) */}
         <div
           ref={lightBgOverlayRef}
-          className="absolute inset-0 bg-[#F2EDE6] opacity-0 pointer-events-none will-change-[opacity] z-0"
+          className="absolute inset-0 bg-[#F2EDE6] opacity-0 pointer-events-none z-0"
         />
 
-        {/* Static Pre-Blurred Radial Glow Overlay (No CSS filter: blur used) */}
+        {/* Static Pre-Blurred Radial Glow Overlay (Zero CSS filter used) */}
         <div
           ref={glowOverlayRef}
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] sm:w-[1000px] sm:h-[1000px] bg-[radial-gradient(ellipse_at_top,_rgba(255,240,215,0.95)_0%,_rgba(232,223,211,0.6)_30%,_rgba(184,146,90,0.25)_55%,_transparent_75%)] pointer-events-none opacity-0 will-change-[opacity,transform] z-10"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[340px] h-[340px] sm:w-[900px] sm:h-[900px] bg-[radial-gradient(ellipse_at_top,_rgba(255,240,215,0.9)_0%,_rgba(232,223,211,0.5)_30%,_rgba(184,146,90,0.2)_55%,_transparent_75%)] pointer-events-none opacity-0 z-10"
         />
 
         {/* ── QUESTION TEXT (BEAT 1 & 2) ── */}
@@ -318,7 +313,7 @@ export default function LightReveal() {
         {/* ── ANSWER TEXT (BEAT 3 & 4) ── */}
         <h2
           ref={answerRef}
-          className="absolute z-20 text-3xl sm:text-6xl md:text-8xl font-light tracking-tight text-center px-5 sm:px-8 font-sans text-[#2A2522] select-none pointer-events-none"
+          className="absolute z-20 text-3xl sm:text-6xl md:text-8xl font-light tracking-tight text-center px-5 sm:px-8 font-sans text-[#2A2522] select-none pointer-events-none opacity-0"
         >
           {t("answer")}
         </h2>

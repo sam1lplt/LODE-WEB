@@ -308,7 +308,7 @@ export default function Footer() {
           >
             {/* Digital Tailor */}
             <div className="relative inline-flex items-center">
-              <span className="font-sans font-light uppercase tracking-[0.25em] text-[var(--color-gold)]">
+              <span className="font-sans font-light tracking-[0.15em] text-[var(--color-gold)]">
                 {digitalTailorText.split("").map((char, i) => (
                   <span
                     key={i}

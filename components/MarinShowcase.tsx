@@ -35,21 +35,24 @@ export default function MarinShowcase() {
     const ctx = gsap.context(() => {
       if (!containerRef.current || !pinStageRef.current) return;
 
-      const setupChoreography = () => {
-        if (!containerRef.current || !pinStageRef.current) return;
-
-        // Clean up previous split instances if re-running
+      const runSplit = () => {
         if (splitName) splitName.revert();
         if (splitLine1) splitLine1.revert();
         if (splitLine2) splitLine2.revert();
         if (splitIntroBody) splitIntroBody.revert();
 
-        // 1. Split Intro Text Elements
         if (nameRef.current) {
           splitName = new SplitType(nameRef.current, {
             types: "chars",
             charClass: "inline-block will-change-transform",
           });
+          if (!splitName.chars || splitName.chars.length === 0) {
+            console.warn("[MarinShowcase] splitName chars were empty, retrying SplitType");
+            splitName = new SplitType(nameRef.current, {
+              types: "chars",
+              charClass: "inline-block will-change-transform",
+            });
+          }
         }
         if (line1Ref.current) {
           splitLine1 = new SplitType(line1Ref.current, {
@@ -70,12 +73,10 @@ export default function MarinShowcase() {
           });
         }
 
-        // 2. Initial Element States
+        // Initial Element States
         if (introGroupRef.current) {
           gsap.set(introGroupRef.current, { opacity: 1, y: 0 });
         }
-
-        // Showcase Layout initially hidden & scaled down
         if (showcaseCardRef.current) {
           gsap.set(showcaseCardRef.current, {
             scale: 0.88,
@@ -86,254 +87,243 @@ export default function MarinShowcase() {
             transformStyle: "preserve-3d",
           });
         }
-
         if (blackFadeRef.current) {
           gsap.set(blackFadeRef.current, { opacity: 0 });
         }
-
-        // Initial specs opacity & offset
         specItemsRef.current.forEach((el) => {
           if (el) gsap.set(el, { opacity: 0.3, x: -15 });
         });
+      };
 
-        // 3. MASTER SCROLL-CHOREOGRAPHED TIMELINE (Total duration normalized to 1)
-        const mm = gsap.matchMedia();
+      runSplit();
 
-        mm.add(
-          {
-            isDesktop: "(min-width: 768px)",
-            isMobile: "(max-width: 767px)",
-          },
-          (context) => {
-            const isMobile = context.conditions?.isMobile ?? false;
+      const mm = gsap.matchMedia();
 
-            const master = gsap.timeline({
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top top",
-                end: "bottom bottom",
-                pin: pinStageRef.current,
-                scrub: isMobile ? 0.1 : 0.8,
-                fastScrollEnd: true,
-                preventOverlaps: true,
-                invalidateOnRefresh: true,
+      mm.add(
+        {
+          isDesktop: "(min-width: 768px)",
+          isMobile: "(max-width: 767px)",
+        },
+        (context) => {
+          const isMobile = context.conditions?.isMobile ?? false;
+
+          const master = gsap.timeline({
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top top",
+              end: "bottom bottom",
+              pin: pinStageRef.current,
+              scrub: isMobile ? 0.5 : 0.8,
+              fastScrollEnd: true,
+              preventOverlaps: true,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          // ── BEAT 1 (0 → 0.14): Intro Text Hold & Subtle Upward Drift ──
+          master.to(
+            introGroupRef.current,
+            {
+              y: -15,
+              duration: 0.14,
+              ease: "none",
+            },
+            0
+          );
+
+          // ── BEAT 2 (0.14 → 0.32): DRAMATIC TEXT EXPLOSION & CLEAR ──
+          if (eyebrowRef.current) {
+            master.to(
+              eyebrowRef.current,
+              {
+                opacity: 0,
+                y: -50,
+                scale: 0.8,
+                duration: 0.12,
+                ease: "power2.in",
               },
-            });
+              0.14
+            );
+          }
 
-            // ── BEAT 1 (0 → 0.14): Intro Text Hold & Subtle Upward Drift ──
+          const lineWords = [
+            ...(splitLine1?.words || []),
+            ...(splitLine2?.words || []),
+          ];
+          const lineDist = isMobile ? 100 : 280;
+          if (lineWords.length > 0) {
+            master.to(
+              lineWords,
+              {
+                x: (i) => (i % 2 === 0 ? -lineDist : lineDist),
+                y: (i) => (isMobile ? -40 : -120) + (i % 3) * (isMobile ? 15 : 40),
+                scale: 0.2,
+                opacity: 0,
+                rotation: (i) => (i % 2 === 0 ? -25 : 25),
+                duration: 0.16,
+                stagger: 0.008,
+                ease: "power3.in",
+              },
+              0.14
+            );
+          }
+
+          const bodyWords = splitIntroBody?.words || [];
+          const bodyDist = isMobile ? 120 : 320;
+          if (bodyWords.length > 0) {
+            master.to(
+              bodyWords,
+              {
+                x: (i) => (i % 2 === 0 ? -bodyDist : bodyDist),
+                y: (i) => (isMobile ? 40 : 120) + (i % 4) * (isMobile ? 15 : 30),
+                scale: 0.15,
+                opacity: 0,
+                rotation: (i) => (i % 2 === 0 ? 30 : -30),
+                duration: 0.16,
+                stagger: 0.006,
+                ease: "power3.in",
+              },
+              0.14
+            );
+          }
+
+          const nameChars = splitName?.chars || [];
+          const charDist = isMobile ? 130 : 450;
+          const charYDist = isMobile ? -120 : -320;
+          if (nameChars.length > 0) {
+            const count = nameChars.length;
+            const centerIndex = (count - 1) / 2;
+
+            master.to(
+              nameChars,
+              {
+                x: (i) => {
+                  const norm = (i - centerIndex) / (centerIndex || 1);
+                  return norm * charDist + (i % 2 === 0 ? 20 : -20);
+                },
+                y: (i) => {
+                  const norm = Math.abs((i - centerIndex) / (centerIndex || 1));
+                  return charYDist - norm * (isMobile ? 30 : 80) + (i % 2 === 0 ? -15 : 15);
+                },
+                scale: isMobile ? 1.3 : 1.8,
+                opacity: 0,
+                rotation: (i) => (i - centerIndex) * (isMobile ? 18 : 35) + (i % 2 === 0 ? 12 : -12),
+                duration: 0.18,
+                stagger: {
+                  from: "center",
+                  amount: 0.08,
+                },
+                ease: "power4.in",
+              },
+              0.14
+            );
+          } else {
+            console.warn("[MarinShowcase] splitName chars were empty during timeline build!");
+          }
+
+          if (introGroupRef.current) {
             master.to(
               introGroupRef.current,
               {
-                y: -15,
-                duration: 0.14,
+                opacity: 0,
+                duration: 0.04,
+              },
+              0.30
+            );
+          }
+
+          // ── BEAT 3 (0.35 → 0.88): STABLE SHOWCASE READ & FOCUS WINDOW ──
+          if (showcaseCardRef.current) {
+            master.to(
+              showcaseCardRef.current,
+              {
+                scale: 1,
+                opacity: 1,
+                y: 0,
+                rotateY: 0,
+                duration: 0.18,
+                ease: "power3.out",
+              },
+              0.35
+            );
+          }
+
+          specItemsRef.current.forEach((el, idx) => {
+            if (el) {
+              master.to(
+                el,
+                {
+                  opacity: 1,
+                  x: 0,
+                  duration: 0.14,
+                  ease: "power2.out",
+                },
+                0.42 + idx * 0.04
+              );
+            }
+          });
+
+          if (showcaseCardRef.current) {
+            master.to(
+              showcaseCardRef.current,
+              {
+                y: -8,
+                duration: 0.35,
                 ease: "none",
               },
-              0
+              0.50
             );
+          }
 
-            // ── BEAT 2 (0.14 → 0.32): DRAMATIC TEXT EXPLOSION & CLEAR ──
-            // Eyebrow shoot up & fade
-            if (eyebrowRef.current) {
+          if (imageFrameRef.current) {
+            const img = imageFrameRef.current.querySelector("img");
+            if (img) {
               master.to(
-                eyebrowRef.current,
+                img,
                 {
-                  opacity: 0,
-                  y: -50,
-                  scale: 0.8,
-                  duration: 0.12,
-                  ease: "power2.in",
-                },
-                0.14
-              );
-            }
-
-            // Sublines & Intro Body Words scatter outward (scaled to viewport)
-            const lineWords = [
-              ...(splitLine1?.words || []),
-              ...(splitLine2?.words || []),
-            ];
-            const lineDist = isMobile ? 90 : 280;
-            if (lineWords.length > 0) {
-              master.to(
-                lineWords,
-                {
-                  x: (i) => (i % 2 === 0 ? -lineDist : lineDist),
-                  y: (i) => (isMobile ? -50 : -120) + (i % 3) * (isMobile ? 15 : 40),
-                  scale: 0.2,
-                  opacity: 0,
-                  rotation: (i) => (i % 2 === 0 ? -25 : 25),
-                  duration: 0.16,
-                  stagger: 0.008,
-                  ease: "power3.in",
-                },
-                0.14
-              );
-            }
-
-            const bodyWords = splitIntroBody?.words || [];
-            const bodyDist = isMobile ? 110 : 320;
-            if (bodyWords.length > 0) {
-              master.to(
-                bodyWords,
-                {
-                  x: (i) => (i % 2 === 0 ? -bodyDist : bodyDist),
-                  y: (i) => (isMobile ? 50 : 120) + (i % 4) * (isMobile ? 15 : 30),
-                  scale: 0.15,
-                  opacity: 0,
-                  rotation: (i) => (i % 2 === 0 ? 30 : -30),
-                  duration: 0.16,
-                  stagger: 0.006,
-                  ease: "power3.in",
-                },
-                0.14
-              );
-            }
-
-            // MARIN Wordmark Characters Radial Explosion
-            const nameChars = splitName?.chars || [];
-            const charDist = isMobile ? 140 : 450;
-            const charYDist = isMobile ? -140 : -320;
-            if (nameChars.length > 0) {
-              const count = nameChars.length;
-              const centerIndex = (count - 1) / 2;
-
-              master.to(
-                nameChars,
-                {
-                  x: (i) => {
-                    const norm = (i - centerIndex) / (centerIndex || 1);
-                    return norm * charDist + (i % 2 === 0 ? 25 : -25);
-                  },
-                  y: (i) => {
-                    const norm = Math.abs((i - centerIndex) / (centerIndex || 1));
-                    return charYDist - norm * (isMobile ? 30 : 80) + (i % 2 === 0 ? -20 : 20);
-                  },
-                  scale: isMobile ? 1.3 : 1.8,
-                  opacity: 0,
-                  rotation: (i) => (i - centerIndex) * (isMobile ? 20 : 35) + (i % 2 === 0 ? 15 : -15),
-                  filter: "blur(4px)",
-                  duration: 0.18,
-                  stagger: {
-                    from: "center",
-                    amount: 0.08,
-                  },
-                  ease: "power4.in",
-                },
-                0.14
-              );
-            }
-
-            // Ensure whole intro group container is hidden by 0.32
-            if (introGroupRef.current) {
-              master.to(
-                introGroupRef.current,
-                {
-                  opacity: 0,
-                  duration: 0.04,
-                },
-                0.30
-              );
-            }
-
-            // ── BEAT 3 (0.35 → 0.88): STABLE SHOWCASE READ & FOCUS WINDOW ──
-            if (showcaseCardRef.current) {
-              master.to(
-                showcaseCardRef.current,
-                {
-                  scale: 1,
-                  opacity: 1,
-                  y: 0,
-                  rotateY: 0,
-                  duration: 0.18,
-                  ease: "power3.out",
-                },
-                0.35
-              );
-            }
-
-            // Specs items reveal
-            specItemsRef.current.forEach((el, idx) => {
-              if (el) {
-                master.to(
-                  el,
-                  {
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.14,
-                    ease: "power2.out",
-                  },
-                  0.42 + idx * 0.04
-                );
-              }
-            });
-
-            // Gentle imperceptible float during reading hold
-            if (showcaseCardRef.current) {
-              master.to(
-                showcaseCardRef.current,
-                {
-                  y: -8,
+                  scale: 1.05,
                   duration: 0.35,
                   ease: "none",
                 },
                 0.50
               );
             }
-
-            if (imageFrameRef.current) {
-              const img = imageFrameRef.current.querySelector("img");
-              if (img) {
-                master.to(
-                  img,
-                  {
-                    scale: 1.05,
-                    duration: 0.35,
-                    ease: "none",
-                  },
-                  0.50
-                );
-              }
-            }
-
-            // ── BEAT 4 (0.88 → 1.0): Clean Handoff Pass-Through ──
-            if (showcaseCardRef.current) {
-              master.to(
-                showcaseCardRef.current,
-                {
-                  scale: 0.95,
-                  opacity: 0,
-                  y: -25,
-                  duration: 0.12,
-                  ease: "power2.in",
-                },
-                0.88
-              );
-            }
-
-            if (blackFadeRef.current) {
-              master.to(
-                blackFadeRef.current,
-                {
-                  opacity: 1,
-                  duration: 0.12,
-                  ease: "power2.inOut",
-                },
-                0.88
-              );
-            }
           }
-        );
 
-        // Refresh calculations after layout & split setup
-        ScrollTrigger.refresh();
-      };
+          // ── BEAT 4 (0.88 → 1.0): Clean Handoff Pass-Through ──
+          if (showcaseCardRef.current) {
+            master.to(
+              showcaseCardRef.current,
+              {
+                scale: 0.95,
+                opacity: 0,
+                y: -25,
+                duration: 0.12,
+                ease: "power2.in",
+              },
+              0.88
+            );
+          }
+
+          if (blackFadeRef.current) {
+            master.to(
+              blackFadeRef.current,
+              {
+                opacity: 1,
+                duration: 0.12,
+                ease: "power2.inOut",
+              },
+              0.88
+            );
+          }
+        }
+      );
 
       if (typeof document !== "undefined" && "fonts" in document) {
         document.fonts.ready.then(() => {
-          setupChoreography();
+          runSplit();
+          ScrollTrigger.refresh();
         });
-      } else {
-        setupChoreography();
       }
     }, containerRef);
 
@@ -350,7 +340,7 @@ export default function MarinShowcase() {
     <section
       ref={containerRef}
       id="marin"
-      className="relative w-full h-[320vh] md:h-[500vh] bg-[var(--color-black)] select-none font-sans"
+      className="relative w-full h-[320svh] min-h-[320vh] md:h-[500vh] bg-[var(--color-black)] select-none font-sans"
     >
       {/* Pinned Full-Viewport Stage */}
       <div

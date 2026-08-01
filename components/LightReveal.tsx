@@ -56,13 +56,14 @@ export default function LightReveal() {
           });
         }
 
+        // Parent Answer container initially hidden & offset down
         if (answerRef.current) {
-          gsap.set(answerRef.current, { opacity: 1 });
+          gsap.set(answerRef.current, { opacity: 0, y: 20 });
         }
 
         const answerWords = splitAnswer?.words || [];
         if (answerWords.length > 0) {
-          gsap.set(answerWords, { opacity: 0, y: 30 });
+          gsap.set(answerWords, { opacity: 0, y: 20 });
         }
       };
 
@@ -85,7 +86,7 @@ export default function LightReveal() {
               start: "top top",
               end: "bottom bottom",
               pin: pinStageRef.current,
-              scrub: isMobile ? 0.4 : 0.8,
+              scrub: isMobile ? 0.3 : 0.8,
               fastScrollEnd: true,
               preventOverlaps: true,
               invalidateOnRefresh: true,
@@ -185,7 +186,21 @@ export default function LightReveal() {
             );
           }
 
-          // Answer text ("O zaman ışıkları açalım.") words reveal
+          // Animate parent Answer container to opacity 1 & y 0
+          if (answerRef.current) {
+            master.to(
+              answerRef.current,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.18,
+                ease: "power2.out",
+              },
+              0.46
+            );
+          }
+
+          // Animate child words if split
           const answerWords = splitAnswer?.words || [];
           if (answerWords.length > 0) {
             master.to(
@@ -196,17 +211,6 @@ export default function LightReveal() {
                 duration: 0.16,
                 stagger: 0.04,
                 ease: "power3.out",
-              },
-              0.46
-            );
-          } else if (answerRef.current) {
-            master.to(
-              answerRef.current,
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.18,
-                ease: "power2.out",
               },
               0.46
             );

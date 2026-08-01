@@ -561,39 +561,6 @@ export default function LightCollectionShowcase() {
           onTouchEnd={handleTouchEnd}
           className="relative max-w-6xl mx-auto py-4 sm:py-16"
         >
-          {/* PREV / NEXT NAV BUTTONS (OUTER EDGES, VERTICALLY CENTERED) */}
-          <button
-            type="button"
-            onClick={() => navigate("prev")}
-            aria-label="Previous Product"
-            className="absolute left-0 sm:-left-6 lg:-left-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 min-w-[44px] min-h-[44px] sm:w-12 sm:h-12 rounded-full border border-[var(--color-gold)]/60 text-[var(--color-light-text,#2A2522)] bg-[#F2EDE6]/80 hover:bg-[var(--color-gold)]/20 hover:border-[var(--color-gold)] transition-all duration-300 flex items-center justify-center backdrop-blur-md group shadow-md"
-          >
-            <svg
-              className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate("next")}
-            aria-label="Next Product"
-            className="absolute right-0 sm:-right-6 lg:-right-12 top-1/2 -translate-y-1/2 z-40 w-11 h-11 min-w-[44px] min-h-[44px] sm:w-12 sm:h-12 rounded-full border border-[var(--color-gold)]/60 text-[var(--color-light-text,#2A2522)] bg-[#F2EDE6]/80 hover:bg-[var(--color-gold)]/20 hover:border-[var(--color-gold)] transition-all duration-300 flex items-center justify-center backdrop-blur-md group shadow-md"
-          >
-            <svg
-              className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
             {/* LEFT COLUMN: FLOATING PHOTO FRAME */}
             <div
@@ -602,6 +569,39 @@ export default function LightCollectionShowcase() {
               className="lg:col-span-7 flex flex-col gap-4 relative"
               style={{ transformStyle: "preserve-3d" }}
             >
+              {/* PREV / NEXT NAV BUTTONS (CENTERED RELATIVE TO PHOTO FRAME) */}
+              <button
+                type="button"
+                onClick={() => navigate("prev")}
+                aria-label="Previous Product"
+                className="absolute left-2 sm:left-3 lg:-left-12 top-[42%] lg:top-1/2 -translate-y-1/2 z-40 w-11 h-11 min-w-[44px] min-h-[44px] sm:w-12 sm:h-12 rounded-full border border-[var(--color-gold)]/60 text-[var(--color-light-text,#2A2522)] bg-[#F2EDE6]/90 hover:bg-[var(--color-gold)] hover:text-white transition-all duration-300 flex items-center justify-center backdrop-blur-md group shadow-md"
+              >
+                <svg
+                  className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate("next")}
+                aria-label="Next Product"
+                className="absolute right-2 sm:right-3 lg:-right-12 top-[42%] lg:top-1/2 -translate-y-1/2 z-40 w-11 h-11 min-w-[44px] min-h-[44px] sm:w-12 sm:h-12 rounded-full border border-[var(--color-gold)]/60 text-[var(--color-light-text,#2A2522)] bg-[#F2EDE6]/90 hover:bg-[var(--color-gold)] hover:text-white transition-all duration-300 flex items-center justify-center backdrop-blur-md group shadow-md"
+              >
+                <svg
+                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
               {/* Photo Backlight Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-tr from-[var(--color-gold)]/15 via-transparent to-transparent rounded-full blur-[80px] pointer-events-none" />
 
@@ -625,10 +625,10 @@ export default function LightCollectionShowcase() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none z-20" />
               </div>
 
-              {/* DASH INDEX INDICATOR BELOW IMAGE (Replaces old view toggle position) */}
+              {/* DASH INDEX INDICATOR BELOW IMAGE */}
               <div className="flex items-center justify-between px-1 mt-2">
-                <span className="text-[11px] font-sans tracking-[0.2em] text-[var(--color-stone)] uppercase font-semibold">
-                  {getProductText("tag", currentProduct.defaultTag) || getProductText("name", currentProduct.defaultName)}
+                <span className="text-xs font-sans tracking-[0.25em] text-[var(--color-gold)] font-medium">
+                  0{activeIndex + 1} <span className="opacity-40">/</span> 0{count}
                 </span>
 
                 <div className="flex items-center gap-1.5">

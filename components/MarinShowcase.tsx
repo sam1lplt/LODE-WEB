@@ -113,7 +113,9 @@ export default function MarinShowcase() {
                 start: "top top",
                 end: "bottom bottom",
                 pin: pinStageRef.current,
-                scrub: isMobile ? 0.4 : 1.0,
+                scrub: isMobile ? 0.1 : 0.8,
+                fastScrollEnd: true,
+                preventOverlaps: true,
                 invalidateOnRefresh: true,
               },
             });

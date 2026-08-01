@@ -61,7 +61,8 @@ export default function ScrollTextReveal() {
             trigger: sectionRef.current,
             start: "top 80%",
             end: "bottom 60%",
-            scrub: 0.5, // Smooth scrub response as user scrolls past
+            scrub: 0.1,
+            fastScrollEnd: true,
             invalidateOnRefresh: true,
           },
         });

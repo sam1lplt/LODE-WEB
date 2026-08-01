@@ -14,12 +14,14 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
   const { isPreloading } = usePreloader();
 
   useEffect(() => {
+    const isTouch = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
     // Initialize Lenis smooth scrolling instance
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: isTouch ? 0.7 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
     });
 
     lenisRef.current = lenis;

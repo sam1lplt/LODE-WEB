@@ -28,9 +28,7 @@ export default function LightReveal() {
       const runSplit = () => {
         if (splitAnswer) splitAnswer.revert();
 
-        const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
-
-        if (isDesktop && answerRef.current) {
+        if (answerRef.current) {
           splitAnswer = new SplitType(answerRef.current, {
             types: "words",
             wordClass: "inline-block mr-[0.25em] will-change-transform",
@@ -59,7 +57,7 @@ export default function LightReveal() {
         }
 
         if (answerRef.current) {
-          gsap.set(answerRef.current, { opacity: 0, y: 20 });
+          gsap.set(answerRef.current, { opacity: 1 });
         }
 
         const answerWords = splitAnswer?.words || [];
@@ -87,7 +85,7 @@ export default function LightReveal() {
               start: "top top",
               end: "bottom bottom",
               pin: pinStageRef.current,
-              scrub: isMobile ? 0.3 : 0.8,
+              scrub: isMobile ? 0.4 : 0.8,
               fastScrollEnd: true,
               preventOverlaps: true,
               invalidateOnRefresh: true,
@@ -112,7 +110,6 @@ export default function LightReveal() {
             const flickerTl = gsap.timeline();
 
             if (isMobile) {
-              // Smooth 3-pulse flicker for ultra-high mobile FPS
               flickerTl
                 .to([glowOverlayRef.current], { opacity: 0.5, duration: 0.06, ease: "none" })
                 .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.06, ease: "none" }, "<")
@@ -123,7 +120,6 @@ export default function LightReveal() {
                 .to([glowOverlayRef.current], { opacity: 1.0, duration: 0.07, ease: "none" })
                 .to(questionRef.current, { opacity: 1.0, color: "#FFFFFF", duration: 0.07, ease: "none" }, "<");
             } else {
-              // Full 8 keyframe steps for desktop
               flickerTl
                 .to([glowOverlayRef.current], { opacity: 0.35, duration: 0.03, ease: "steps(1)" })
                 .to(questionRef.current, { opacity: 0.8, color: "#E8DFD3", duration: 0.03, ease: "steps(1)" }, "<")
@@ -151,7 +147,6 @@ export default function LightReveal() {
           }
 
           // ── BEAT 3 (0.42 → 0.85): FULL ILLUMINATION & PALETTE SHIFT ──
-          // 1. Light background overlay fades in (GPU opacity compositing, 0 repaint cost)
           if (lightBgOverlayRef.current) {
             master.to(
               lightBgOverlayRef.current,
@@ -164,7 +159,6 @@ export default function LightReveal() {
             );
           }
 
-          // 2. Glow overlay expands and softens (Scale/opacity transform only)
           if (glowOverlayRef.current) {
             master.to(
               glowOverlayRef.current,
@@ -178,7 +172,6 @@ export default function LightReveal() {
             );
           }
 
-          // 3. Question text scales & fades out
           if (questionRef.current) {
             master.to(
               questionRef.current,
@@ -192,8 +185,21 @@ export default function LightReveal() {
             );
           }
 
-          // 4. Answer text ("O zaman ışıkları açalım.")
-          if (answerRef.current) {
+          // Answer text ("O zaman ışıkları açalım.") words reveal
+          const answerWords = splitAnswer?.words || [];
+          if (answerWords.length > 0) {
+            master.to(
+              answerWords,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.16,
+                stagger: 0.04,
+                ease: "power3.out",
+              },
+              0.46
+            );
+          } else if (answerRef.current) {
             master.to(
               answerRef.current,
               {
@@ -206,22 +212,7 @@ export default function LightReveal() {
             );
           }
 
-          const answerWords = splitAnswer?.words || [];
-          if (!isMobile && answerWords.length > 0) {
-            master.to(
-              answerWords,
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.16,
-                stagger: 0.04,
-                ease: "power3.out",
-              },
-              0.46
-            );
-          }
-
-          // 5. Header Theme Transition: animate CSS variables on :root to shift Header to dark palette
+          // Header Theme Transition to light edition palette
           master.to(
             ":root",
             {
@@ -246,17 +237,6 @@ export default function LightReveal() {
               0.85
             );
           }
-
-          if (lightBgOverlayRef.current) {
-            master.to(
-              lightBgOverlayRef.current,
-              {
-                opacity: 1,
-                duration: 0.15,
-              },
-              0.85
-            );
-          }
         }
       );
 
@@ -272,7 +252,6 @@ export default function LightReveal() {
       if (splitAnswer) splitAnswer.revert();
       ctx.revert();
 
-      // Reset root CSS variables on unmount
       if (typeof document !== "undefined") {
         document.documentElement.style.setProperty("--header-theme-light", "0");
         document.documentElement.style.setProperty("--header-text-color", "#E8DFD3");
@@ -290,13 +269,13 @@ export default function LightReveal() {
         ref={pinStageRef}
         className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center bg-[var(--color-black)]"
       >
-        {/* High-Performance Light Background Overlay (Opacity Composited, Zero Repaint) */}
+        {/* Light Background Overlay (GPU opacity composited) */}
         <div
           ref={lightBgOverlayRef}
           className="absolute inset-0 bg-[#F2EDE6] opacity-0 pointer-events-none z-0"
         />
 
-        {/* Static Pre-Blurred Radial Glow Overlay (Zero CSS filter used) */}
+        {/* Static Pre-Blurred Radial Glow Overlay */}
         <div
           ref={glowOverlayRef}
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[340px] h-[340px] sm:w-[900px] sm:h-[900px] bg-[radial-gradient(ellipse_at_top,_rgba(255,240,215,0.9)_0%,_rgba(232,223,211,0.5)_30%,_rgba(184,146,90,0.2)_55%,_transparent_75%)] pointer-events-none opacity-0 z-10"
@@ -313,7 +292,7 @@ export default function LightReveal() {
         {/* ── ANSWER TEXT (BEAT 3 & 4) ── */}
         <h2
           ref={answerRef}
-          className="absolute z-20 text-3xl sm:text-6xl md:text-8xl font-light tracking-tight text-center px-5 sm:px-8 font-sans text-[#2A2522] select-none pointer-events-none opacity-0"
+          className="absolute z-20 text-3xl sm:text-6xl md:text-8xl font-light tracking-tight text-center px-5 sm:px-8 font-sans text-[#2A2522] select-none pointer-events-none"
         >
           {t("answer")}
         </h2>
